@@ -72,6 +72,26 @@ def build_classification_model(args):
                 model = timm.create_model('swin_base_patch4_window7_224', num_classes=args.num_class, pretrained=True)
             elif args.init.lower() =="imagenet_21k":
                 model = timm.create_model('swin_base_patch4_window7_224_in22k', num_classes=args.num_class, pretrained=True)
+        
+        elif args.model_name.lower() == "swinv2_base_192":
+            if args.init.lower() =="random":
+                model = timm.create_model('swinv2_base_window12_192_22k', num_classes=args.num_class, pretrained=False)
+            elif args.init.lower() =="imagenet_22k":
+                model = timm.create_model('swinv2_base_window12_192_22k', num_classes=args.num_class, pretrained=True)
+        
+        elif args.model_name.lower() == "swinv2_base_256":
+            if args.init.lower() =="random":
+                model = timm.create_model('swinv2_base_window12to16_192to256_22kft1k', num_classes=args.num_class, pretrained = False)
+            elif args.init.lower() =="imagenet_22kto1k":
+                model = timm.create_model('swinv2_base_window12to16_192to256_22kft1k', num_classes=args.num_class, pretrained = True)
+        
+        elif args.model_name.lower() == "convnext_base":
+            if args.init.lower() == "random":
+                model = timm.create_model('convnext_base_in22ft1k', num_classes=args.num_class, pretrained=False)
+            elif args.init.lower() == "imagenet_22kto1k":
+                model = timm.create_model('convnext_base_in22ft1k', num_classes=args.num_class, pretrained=True)
+            elif args.init.lower() == "imagenet_22k":
+                model = timm.create_model('convnext_base_in22k', num_classes=args.num_class, pretrained=True)
             
         elif args.model_name.lower() == "swin_tiny": 
             if args.init.lower() =="random":
@@ -168,5 +188,6 @@ def load_pretrained_weights(model, init, pretrained_weights):
 def save_checkpoint(state,filename='model'):
 
     torch.save( state,filename + '.pth.tar')
+
 
 
