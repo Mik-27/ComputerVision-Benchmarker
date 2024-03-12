@@ -125,18 +125,23 @@ def main(args):
     args.exp_name = args.model_name + "_" + args.init + args.exp_name
     model_path = os.path.join("./Models/Classification",args.data_set)
     output_path = os.path.join("./Outputs/Classification",args.data_set)
-
+    if args.model_name == "swinv2_base_192":
+        image_size = 192
+    elif args.model_name == "swinv2_base_256":
+        image_size = 256
+    else:
+        image_size = 224
     if args.data_set == "ChestXray14":
         diseases = ['Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule',
                     'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema',
                     'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia']
         dataset_train = ChestXray14Dataset(images_path=args.data_dir, file_path=args.train_list,
-                                           augment=build_transform_classification(normalize=args.normalization, mode="train"),annotation_percent=args.anno_percent)
+                                           augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="train"),annotation_percent=args.anno_percent)
 
         dataset_val = ChestXray14Dataset(images_path=args.data_dir, file_path=args.val_list,
-                                         augment=build_transform_classification(normalize=args.normalization, mode="valid"))
+                                         augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="valid"))
         dataset_test = ChestXray14Dataset(images_path=args.data_dir, file_path=args.test_list,
-                                          augment=build_transform_classification(normalize=args.normalization, mode="test"))
+                                          augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="test"))
 
         classification_engine(args, model_path, output_path, diseases, dataset_train, dataset_val, dataset_test)
 
@@ -148,26 +153,26 @@ def main(args):
         test_diseases_name = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Pleural Effusion']
         test_diseases = [diseases.index(c) for c in test_diseases_name]
         dataset_train = CheXpertDataset(images_path=args.data_dir, file_path=args.train_list,
-                                        augment=build_transform_classification(normalize=args.normalization, mode="train"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label, annotation_percent=args.anno_percent)
+                                        augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="train"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label, annotation_percent=args.anno_percent)
 
         dataset_val = CheXpertDataset(images_path=args.data_dir, file_path=args.val_list,
-                                      augment=build_transform_classification(normalize=args.normalization, mode="valid"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label)
+                                      augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="valid"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label)
 
         dataset_test = CheXpertDataset(images_path=args.data_dir, file_path=args.test_list,
-                                       augment=build_transform_classification(normalize=args.normalization, mode="test"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label)
+                                       augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="test"), uncertain_label=args.uncertain_label, unknown_label=args.unknown_label)
 
         classification_engine(args, model_path, output_path, diseases, dataset_train, dataset_val, dataset_test, test_diseases)
 
     elif args.data_set == "Shenzhen":
         diseases = ['TB']
         dataset_train = ShenzhenCXR(images_path=args.data_dir, file_path=args.train_list,
-                                    augment=build_transform_classification(normalize=args.normalization, mode="train"), annotation_percent=args.anno_percent)
+                                    augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="train"), annotation_percent=args.anno_percent)
 
         dataset_val = ShenzhenCXR(images_path=args.data_dir, file_path=args.val_list,
-                                  augment=build_transform_classification(normalize=args.normalization, mode="valid"))
+                                  augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="valid"))
 
         dataset_test = ShenzhenCXR(images_path=args.data_dir, file_path=args.test_list,
-                                   augment=build_transform_classification(normalize=args.normalization, mode="test"))
+                                   augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="test"))
 
 
         classification_engine(args, model_path, output_path, diseases, dataset_train, dataset_val, dataset_test)
@@ -175,26 +180,26 @@ def main(args):
     elif args.data_set == "VinDrCXR":
         diseases = ['PE', 'Lung tumor', 'Pneumonia', 'Tuberculosis', 'Other diseases', 'No finding']
         dataset_train = VinDrCXR(images_path=args.data_dir, file_path=args.train_list,
-                                    augment=build_transform_classification(normalize=args.normalization, mode="train"), annotation_percent=args.anno_percent)
+                                    augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="train"), annotation_percent=args.anno_percent)
 
         dataset_val = VinDrCXR(images_path=args.data_dir, file_path=args.val_list,
-                                  augment=build_transform_classification(normalize=args.normalization, mode="valid"))
+                                  augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="valid"))
 
         dataset_test = VinDrCXR(images_path=args.data_dir, file_path=args.test_list,
-                                   augment=build_transform_classification(normalize=args.normalization, mode="test"))
+                                   augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="test"))
 
 
         classification_engine(args, model_path, output_path, diseases, dataset_train, dataset_val, dataset_test)
     elif args.data_set == "RSNAPneumonia":
         diseases = ['Normal', 'No Lung Opacity/Not Normal', 'Lung Opacity']
         dataset_train = RSNAPneumonia(images_path=args.data_dir, file_path=args.train_list,
-                                    augment=build_transform_classification(normalize=args.normalization, mode="train"), annotation_percent=args.anno_percent)
+                                    augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="train"), annotation_percent=args.anno_percent)
 
         dataset_val = RSNAPneumonia(images_path=args.data_dir, file_path=args.val_list,
-                                  augment=build_transform_classification(normalize=args.normalization, mode="valid"))
+                                  augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="valid"))
 
         dataset_test = RSNAPneumonia(images_path=args.data_dir, file_path=args.test_list,
-                                   augment=build_transform_classification(normalize=args.normalization, mode="test"))
+                                   augment=build_transform_classification(normalize=args.normalization, crop_size=image_size, mode="test"))
 
 
         classification_engine(args, model_path, output_path, diseases, dataset_train, dataset_val, dataset_test)
