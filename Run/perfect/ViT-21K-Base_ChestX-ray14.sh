@@ -27,7 +27,7 @@ echo_time "[+] Done"
 echo ""
 
 echo_time "[2/4] Activating ViT virtual environment"
-source activate swin
+source activate sl
 echo_time "[+] Done"
 echo ""
 
