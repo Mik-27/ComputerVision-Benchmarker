@@ -44,7 +44,7 @@ python main_classification.py \
 	--init imagenet_22k \
 	--num_class 14 \
 	--normalization chestx-ray \
-	--data_dir /scratch/hmudigon/datasets/ChestX-ray14/images \
+	--data_dir /scratch/hmudigon/datasets/ssl/ChestX-ray14/images \
 	--train_list dataset/Xray14_train_official.txt \
 	--val_list dataset/Xray14_val_official.txt \
 	--test_list dataset/Xray14_test_official.txt \
