@@ -2,7 +2,7 @@ import os
 import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import roc_auc_score
-
+from transformers import AutoImageProcessor, ConvNextV2ForImageClassification
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -92,6 +92,15 @@ def build_classification_model(args):
                 model = timm.create_model('convnext_base_in22ft1k', num_classes=args.num_class, pretrained=True)
             elif args.init.lower() == "imagenet_22k":
                 model = timm.create_model('convnext_base_in22k', num_classes=args.num_class, pretrained=True)
+            
+            
+        elif args.model_name.lower() == "convnextv2_base":
+            if args.init.lower() == "imagenet_1k":
+                preprocessor = AutoImageProcessor.from_pretrained("facebook/convnextv2-base-1k-224")
+                model = ConvNextV2ForImageClassification.from_pretrained("facebook/convnextv2-base-1k-224")
+            if args.init.lower() == "imagenet_22k":
+                preprocessor = AutoImageProcessor.from_pretrained("facebook/convnextv2-base-22k-224")
+                model = ConvNextV2ForImageClassification.from_pretrained("facebook/convnextv2-base-22k-224")
             
         elif args.model_name.lower() == "swin_tiny": 
             if args.init.lower() =="random":

@@ -5,9 +5,9 @@
 #SBATCH -p general
 #SBATCH --gres=gpu:a100:3
 #SBATCH -q public
-#SBATCH --job-name=ConvNeXtV1-22K-Base_ChestX-ray14
-#SBATCH --output=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/ConvNeXtV1-22K-Base_ChestX-ray14-%j.out
-#SBATCH --error=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/ConvNeXtV1-22K-Base_ChestX-ray14-%j.err
+#SBATCH --job-name=ConvNeXtV2-22K-Base_ChestX-ray14
+#SBATCH --output=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/ConvNeXtV2-22K-Base_ChestX-ray14-%j.out
+#SBATCH --error=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/ConvNeXtV2-22K-Base_ChestX-ray14-%j.err
 #SBATCH --mem=80G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hmudigon@asu.edu
@@ -40,7 +40,7 @@ echo ""
 echo_time "[4/4] Initiating code execution"
 
 python main_classification.py \
-	--model convnext_base \
+	--model convnextv2_base \
 	--init imagenet_22k \
 	--num_class 14 \
 	--normalization chestx-ray \
@@ -48,9 +48,9 @@ python main_classification.py \
 	--train_list dataset/Xray14_train_official.txt \
 	--val_list dataset/Xray14_val_official.txt \
 	--test_list dataset/Xray14_test_official.txt \
-	--batch_size 256 \
+	--batch_size 512 \
 	--epochs 200 \
-	--exp_name ConvNeXtV1-22K-Base_ChestX-ray14 \
+	--exp_name ConvNeXtV2-22K-Base_ChestX-ray14 \
 	--lr 0.01 \
 	--opt sgd \
 	--trial 10 \
