@@ -6,18 +6,18 @@
 #SBATCH --gres=gpu:a100:3
 #SBATCH -q public
 #SBATCH --job-name=SwinV2-22Kto1k-256-Base_ChestX-ray14
-#SBATCH --output=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/SwinV2-22Kto1k-256-Base_ChestX-ray14-%j.out
-#SBATCH --error=/scratch/hmudigon/Acad/CSE598-ODL/Supervised/slurm_op/SwinV2-22Kto1k-256-Base_ChestX-ray14-%j.err
+#SBATCH --output=/scratch/mthaku12/Supervised/slurm_op/SwinV2-22Kto1k-256-Base_ChestX-ray14-%j.out
+#SBATCH --error=/scratch/mthaku12/Supervised/slurm_op/SwinV2-22Kto1k-256-Base_ChestX-ray14-%j.err
 #SBATCH --mem=80G
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=hmudigon@asu.edu
+#SBATCH --mail-user=mthaku12@asu.edu
 
 # Function to echo the current time
 echo_time() {
 	echo "Timestamp: [$(/bin/date '+%Y-%m-%d %H:%M:%S')]......................................................$1"
 }
 
-echo "===== himudigonda ====="
+echo "===== mthaku12 ====="
 echo ""
 echo ""
 
@@ -32,7 +32,7 @@ echo_time "[+] Done"
 echo ""
 
 echo_time "[3/4] Changing working directory"
-cd /scratch/hmudigon/Acad/CSE598-ODL/Supervised
+cd /scratch/mthaku12/Supervised
 
 echo_time "[+] Done"
 echo ""
@@ -48,13 +48,15 @@ python main_classification.py \
 	--train_list dataset/Xray14_train_official.txt \
 	--val_list dataset/Xray14_val_official.txt \
 	--test_list dataset/Xray14_test_official.txt \
-	--batch_size 512 \
+	--batch_size 128 \
 	--epochs 200 \
 	--exp_name SwinV2-22Kto1k-256-Base_ChestX-ray14 \
-	--lr 0.01 \
-	--opt sgd \
-	--trial 10 \
-	--warmup-epochs 0 \
+	--lr 0.001 \
+	--opt adamw \
+	--weight-decay 0.05 \
+	--trial 3 \
+	--warmup-epochs 20 \
+    --patience 20 \
 	--workers 32 \
 	--print_freq 25
 
@@ -64,4 +66,4 @@ echo ""
 
 echo_time "[+] Execution completed successfully!"
 echo ""
-echo "===== himudigonda ====="
+echo "===== mthaku12 ====="

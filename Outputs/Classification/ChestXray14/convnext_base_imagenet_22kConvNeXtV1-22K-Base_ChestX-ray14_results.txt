@@ -1,0 +1,11 @@
+Disease = ['Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia']
+Disease = ['Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia']
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_0: AUC = [0.7636	0.8709	0.8204	0.7042	0.8027	0.7317	0.7167	0.8489	0.7435	0.8361
+ 0.8578	0.7952	0.7544	0.8615]
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_0: AUC = 0.7934
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_1: AUC = [0.7595	0.8629	0.8215	0.6927	0.8063	0.7449	0.7058	0.8469	0.7405	0.8418
+ 0.8634	0.7838	0.7533	0.8402]
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_1: AUC = 0.7903
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_2: AUC = [0.7633	0.8661	0.8211	0.7065	0.8002	0.7439	0.714 	0.8567	0.7334	0.8434
+ 0.8707	0.7947	0.7628	0.8599]
+convnext_base_imagenet_22kConvNeXtV1-22K-Base_ChestX-ray14_run_2: AUC = 0.7955

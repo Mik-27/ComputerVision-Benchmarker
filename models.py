@@ -2,7 +2,7 @@ import os
 import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import roc_auc_score
-from transformers import AutoImageProcessor, ConvNextV2ForImageClassification
+
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -93,15 +93,6 @@ def build_classification_model(args):
             elif args.init.lower() == "imagenet_22k":
                 model = timm.create_model('convnext_base_in22k', num_classes=args.num_class, pretrained=True)
             
-            
-        elif args.model_name.lower() == "convnextv2_base":
-            if args.init.lower() == "imagenet_1k":
-                preprocessor = AutoImageProcessor.from_pretrained("facebook/convnextv2-base-1k-224")
-                model = ConvNextV2ForImageClassification.from_pretrained("facebook/convnextv2-base-1k-224")
-            if args.init.lower() == "imagenet_22k":
-                preprocessor = AutoImageProcessor.from_pretrained("facebook/convnextv2-base-22k-224")
-                model = ConvNextV2ForImageClassification.from_pretrained("facebook/convnextv2-base-22k-224")
-            
         elif args.model_name.lower() == "swin_tiny": 
             if args.init.lower() =="random":
                 model = timm.create_model('swin_tiny_patch4_window7_224', num_classes=args.num_class, pretrained=False)
@@ -132,9 +123,32 @@ def build_classification_model(args):
                 model = simmim.create_model(args)
             elif args.init.lower() =="imagenet_1k":
                 model = timm.create_model('swin_base_patch4_window7_224', num_classes=args.num_class, checkpoint_path=args.pretrained_weights)
+            elif args.init.lower() =="imagenet_21k":
+                model = timm.create_model('swin_base_patch4_window7_224_in22k', num_classes=args.num_class, pretrained=True)
+                load_pretrained_weights(model, args.init.lower(), args.pretrained_weights)
             elif args.init.lower() == "ark":
                 model = timm.create_model('swin_base_patch4_window7_224', num_classes=args.num_class, pretrained=False)
                 load_pretrained_weights(model, args.init.lower(), args.pretrained_weights)
+
+        elif args.model_name.lower() == "swinv2_base_192":
+            if args.init.lower() =="random":
+                model = timm.create_model('swinv2_base_window12_192_22k', num_classes=args.num_class, pretrained=False)
+            elif args.init.lower() =="imagenet_22k":
+                model = timm.create_model('swinv2_base_window12_192_22k', num_classes=args.num_class, pretrained=True)
+        
+        elif args.model_name.lower() == "swinv2_base_256":
+            if args.init.lower() =="random":
+                model = timm.create_model('swinv2_base_window12to16_192to256_22kft1k', num_classes=args.num_class, pretrained = False)
+            elif args.init.lower() =="imagenet_22kto1k":
+                model = timm.create_model('swinv2_base_window12to16_192to256_22kft1k', num_classes=args.num_class, pretrained = True)
+        
+        elif args.model_name.lower() == "convnext_base":
+            if args.init.lower() == "random":
+                model = timm.create_model('convnext_base_in22ft1k', num_classes=args.num_class, pretrained=False)
+            elif args.init.lower() == "imagenet_22kto1k":
+                model = timm.create_model('convnext_base_in22ft1k', num_classes=args.num_class, pretrained=True)
+            elif args.init.lower() == "imagenet_22k":
+                model = timm.create_model('convnext_base_in22k', num_classes=args.num_class, pretrained=True)
                 
         elif args.model_name.lower() == "swin_tiny": 
             model = timm.create_model('swin_tiny_patch4_window7_224', num_classes=args.num_class)
@@ -158,37 +172,44 @@ def ClassificationNet(args):
 
 def load_pretrained_weights(model, init, pretrained_weights):
     checkpoint = torch.load(pretrained_weights, map_location="cpu")
-    if init =="dino":
-        checkpoint_key = "teacher"
-        if checkpoint_key is not None and checkpoint_key in checkpoint:
-            print(f"Take key {checkpoint_key} in provided checkpoint dict")
-            state_dict = checkpoint[checkpoint_key]
-        # remove `module.` prefix
-        state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
-        # remove `backbone.` prefix induced by multicrop wrapper
-        state_dict = {k.replace("backbone.", ""): v for k, v in state_dict.items()}
-    elif init =="moco_v3":
-        state_dict = checkpoint['state_dict']
-        for k in list(state_dict.keys()):
-            # retain only base_encoder up to before the embedding layer
-            if k.startswith('module.base_encoder') and not k.startswith('module.base_encoder.head'):
-                # remove prefix
-                state_dict[k[len("module.base_encoder."):]] = state_dict[k]
-            # delete renamed or unused k
+    # if init =="dino":
+    #     checkpoint_key = "teacher"
+    #     if checkpoint_key is not None and checkpoint_key in checkpoint:
+    #         print(f"Take key {checkpoint_key} in provided checkpoint dict")
+    #         state_dict = checkpoint[checkpoint_key]
+    #     # remove `module.` prefix
+    #     state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+    #     # remove `backbone.` prefix induced by multicrop wrapper
+    #     state_dict = {k.replace("backbone.", ""): v for k, v in state_dict.items()}
+    # elif init =="moco_v3":
+    #     state_dict = checkpoint['state_dict']
+    #     for k in list(state_dict.keys()):
+    #         # retain only base_encoder up to before the embedding layer
+    #         if k.startswith('module.base_encoder') and not k.startswith('module.base_encoder.head'):
+    #             # remove prefix
+    #             state_dict[k[len("module.base_encoder."):]] = state_dict[k]
+    #         # delete renamed or unused k
+    #         del state_dict[k]
+    # elif init == "moby":
+    #     state_dict = checkpoint['model']
+    #     state_dict = {k.replace('encoder.', ''): v for k, v in state_dict.items() if 'encoder.' in k}
+    # elif init == "mae":
+    #     state_dict = checkpoint['model']   
+    # elif init == "ark":
+    #     state_dict = checkpoint
+    #     for k in ['head.weight', 'head.bias', 'head_dist.weight', 'head_dist.bias']:
+    #       if k in state_dict:
+    #           print(f"Removing key {k} from pretrained checkpoint")
+    #           del state_dict[k]   
+    # else:
+    #     print("Trying to load the checkpoint for {} at {}, but we cannot guarantee the success.".format(init, pretrained_weights))
+
+    state_dict = checkpoint["state_dict"]
+    state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+    for k in ['head.weight', 'head.bias', 'head_dist.weight', 'head_dist.bias']:
+        if k in state_dict:
+            print(f"Removing key {k} from pretrained checkpoint")
             del state_dict[k]
-    elif init == "moby":
-        state_dict = checkpoint['model']
-        state_dict = {k.replace('encoder.', ''): v for k, v in state_dict.items() if 'encoder.' in k}
-    elif init == "mae":
-        state_dict = checkpoint['model']   
-    elif init == "ark":
-        state_dict = checkpoint
-        for k in ['head.weight', 'head.bias', 'head_dist.weight', 'head_dist.bias']:
-          if k in state_dict:
-              print(f"Removing key {k} from pretrained checkpoint")
-              del state_dict[k]   
-    else:
-        print("Trying to load the checkpoint for {} at {}, but we cannot guarantee the success.".format(init, pretrained_weights))
         
     msg = model.load_state_dict(state_dict, strict=False)
     print('Loaded with msg: {}'.format(msg))

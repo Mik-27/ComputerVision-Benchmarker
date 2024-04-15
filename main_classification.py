@@ -87,7 +87,7 @@ def get_args_parser():
 
 
     parser.add_option("--patience", dest="patience", help="num of patient epoches", default=10, type="int")
-    parser.add_option("--early_stop", dest="early_stop", help="whether use early_stop", default=True, action="callback",
+    parser.add_option("--early_stop", dest="early_stop", help="whether use early_stop", default=False, action="callback",
                       callback=vararg_callback_bool)
     parser.add_option("--trial", dest="num_trial", help="number of trials", default=1, type="int")
     parser.add_option("--start_index", dest="start_index", help="the start model index", default=0, type="int")
