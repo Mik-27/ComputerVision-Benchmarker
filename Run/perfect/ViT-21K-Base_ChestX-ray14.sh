@@ -6,8 +6,8 @@
 #SBATCH --gres=gpu:a100:3
 #SBATCH -q public
 #SBATCH --job-name=ViT-21K-Base_ChestX-ray14
-#SBATCH --output=/scratch/mthaku12/Supervised/slurm_op/ViT-21K-Base_ChestX-ray14-%j.out
-#SBATCH --error=/scratch/mthaku12/Supervised/slurm_op/ViT-21K-Base_ChestX-ray14-%j.err
+#SBATCH --output=/scratch/mthaku12/ComputerVision-Benchmarker/slurm_op/ViT-21K-Base_ChestX-ray14-%j.out
+#SBATCH --error=/scratch/mthaku12/ComputerVision-Benchmarker/slurm_op/ViT-21K-Base_ChestX-ray14-%j.err
 #SBATCH --mem=80G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=mthaku12@asu.edu
@@ -32,7 +32,7 @@ echo_time "[+] Done"
 echo ""
 
 echo_time "[3/4] Changing working directory"
-cd /scratch/mthaku12/Supervised
+cd /scratch/mthaku12/ComputerVision-Benchmarker
 
 echo_time "[+] Done"
 echo ""
@@ -48,13 +48,14 @@ python main_classification.py \
 	--train_list dataset/Xray14_train_official.txt \
 	--val_list dataset/Xray14_val_official.txt \
 	--test_list dataset/Xray14_test_official.txt \
-	--batch_size 512 \
-	--epochs 200 \
+	--batch_size 64 \
+	--epochs 250 \
 	--exp_name ViT-21K-Base_ChestX-ray14 \
 	--lr 0.01 \
-	--opt sgd \
-	--trial 10 \
-	--warmup-epochs 0 \
+	--opt adam \
+	--weight-decay 0.1 \
+	--trial 1 \
+	--warmup-epochs 20 \
 	--workers 32 \
 	--print_freq 25
 	

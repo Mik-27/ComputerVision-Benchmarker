@@ -1,0 +1,7 @@
+Disease = ['Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia']
+swin_base_imagenet_21kto1kSwinV1-21to1K-Base_ChestX-ray14_run_0: AUC = [0.7811	0.8799	0.8347	0.7074	0.8235	0.7597	0.7312	0.8674	0.7582	0.8474
+ 0.9083	0.8318	0.7781	0.8786]
+swin_base_imagenet_21kto1kSwinV1-21to1K-Base_ChestX-ray14_run_0: AUC = 0.8134
+All trials: mAUC  = [0.8134]
+Mean AUC over All trials = 0.8134
+STD over All trials:  = 0.0000
